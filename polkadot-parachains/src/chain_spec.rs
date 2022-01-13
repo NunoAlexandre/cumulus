@@ -367,6 +367,7 @@ pub fn statemine_development_config(id: ParaId) -> StatemineChainSpec {
 		ChainType::Local,
 		move || {
 			statemine_genesis(
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
 				// initial collators.
 				vec![(
 					get_account_id_from_seed::<sr25519::Public>("Alice"),
@@ -402,6 +403,7 @@ pub fn statemine_local_config(id: ParaId) -> StatemineChainSpec {
 		ChainType::Local,
 		move || {
 			statemine_genesis(
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
 				// initial collators.
 				vec![
 					(
@@ -451,6 +453,7 @@ pub fn statemine_config(id: ParaId) -> StatemineChainSpec {
 		ChainType::Live,
 		move || {
 			statemine_genesis(
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
 				// initial collators.
 				vec![
 					(
@@ -491,6 +494,7 @@ pub fn statemine_config(id: ParaId) -> StatemineChainSpec {
 }
 
 fn statemine_genesis(
+	root_key: AccountId,
 	invulnerables: Vec<(AccountId, AuraId)>,
 	endowed_accounts: Vec<AccountId>,
 	id: ParaId,
@@ -506,6 +510,7 @@ fn statemine_genesis(
 			balances: endowed_accounts.iter().cloned().map(|k| (k, STATEMINE_ED * 4096)).collect(),
 		},
 		parachain_info: statemine_runtime::ParachainInfoConfig { parachain_id: id },
+		sudo: statemine_runtime::SudoConfig { key: root_key },
 		collator_selection: statemine_runtime::CollatorSelectionConfig {
 			invulnerables: invulnerables.iter().cloned().map(|(acc, _)| acc).collect(),
 			candidacy_bond: STATEMINE_ED * 16,
